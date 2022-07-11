@@ -23,8 +23,8 @@ class BirdComponent extends SpriteComponent {
   // TODO: boid properties
   static const double vision = 160;
   static final num safeDistanceSquared = pow(6, 2);
-  static const double preferredVelocity = 50;
-  static const double maxVelocity = 100;
+  static const double preferredVelocity = 25;
+  static const double maxVelocity = 60;
   static const double scale1 = 1 / 3;
   static const double scale2 = 1 / 2;
   static const double scale3 = 1 / 4;
