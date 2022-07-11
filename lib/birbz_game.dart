@@ -26,19 +26,7 @@ class BirbzGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
-    // add(TextComponent(
-    //   text: 'Birbz Game',
-    //   position: size.half(),
-    //   anchor: Anchor.center,
-    // ));
-    state = await GameState.fromRandom(50, size);
-
-    // add(FpsTextComponent(
-    //   scale: Vector2.all(theme.fpsTextScale),
-    //   position: Vector2.all(20),
-    // ));
-
-    // add(rectangle);
+    state = await GameState.fromRandom(200, size);
 
     for (var e in state.birds) {
       await add(e);

@@ -20,7 +20,7 @@ class GameState {
         BirdComponent(
           sprite: state.birdSprite,
           position: screenSize.hadamardProduct(Vector2.random(state.random)),
-          angle: pi * state.random.nextDouble(),
+          angle: 2 * pi * state.random.nextDouble(),
           // angle: pi / 6,
           anchor: Anchor.center,
         ),

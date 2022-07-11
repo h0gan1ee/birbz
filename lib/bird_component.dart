@@ -21,13 +21,13 @@ class BirdComponent extends SpriteComponent {
     _margin = size.length / 2;
   }
   // TODO: boid properties
-  static const double vision = 150;
-  static final num safeDistanceSquared = pow(20, 2);
-  static const double preferredVelocity = 20;
+  static const double vision = 100;
+  static final num safeDistanceSquared = pow(10, 2);
+  static const double preferredVelocity = 10;
   static const double maxVelocity = 50;
-  static const double scale1 = 1 / 50;
-  static const double scale2 = 1 / 8;
-  static const double scale3 = 1;
+  static const double scale1 = 1 / 6;
+  static const double scale2 = 1 / 6;
+  static const double scale3 = 1 / 20;
 
   late Vector2 _velocity;
   Vector2? _nextVelocity;
@@ -64,16 +64,16 @@ class BirdComponent extends SpriteComponent {
       _nextVelocity = _velocity + v1 + v2 + v3;
 
       // rule 4: must in constrain
-      if ((absolutePosition.x < _margin && _nextVelocity!.x < 0) ||
-          (absolutePosition.x > screenSize.x - _margin &&
-              _nextVelocity!.x > 0)) {
-        _nextVelocity!.x = -_nextVelocity!.x;
-      }
-      if ((absolutePosition.y < _margin && _nextVelocity!.y < 0) ||
-          (absolutePosition.y > screenSize.y - _margin &&
-              _nextVelocity!.y > 0)) {
-        _nextVelocity!.y = -_nextVelocity!.y;
-      }
+      // if ((absolutePosition.x < _margin && _nextVelocity!.x < 0) ||
+      //     (absolutePosition.x > screenSize.x - _margin &&
+      //         _nextVelocity!.x > 0)) {
+      //   _nextVelocity!.x = -_nextVelocity!.x;
+      // }
+      // if ((absolutePosition.y < _margin && _nextVelocity!.y < 0) ||
+      //     (absolutePosition.y > screenSize.y - _margin &&
+      //         _nextVelocity!.y > 0)) {
+      //   _nextVelocity!.y = -_nextVelocity!.y;
+      // }
 
       final length = _nextVelocity!.length;
       if (length > maxVelocity) {
