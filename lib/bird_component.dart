@@ -2,24 +2,7 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 
-import 'game_state.dart';
-
 class BirdComponent extends SpriteComponent {
-  // TODO: boid properties
-  static const double vision = 150;
-  static final num safeDistanceSquared = pow(20, 2);
-  static const double preferredVelocity = 20;
-  static const double maxVelocity = 50;
-  static const double scale1 = 1 / 50;
-  static const double scale2 = 1 / 8;
-  static const double scale3 = 1;
-  // static const double scale3 = 1 / 20;
-
-  late Vector2 _velocity;
-  Vector2? _nextVelocity;
-  List<Neighbor> neighbors = [];
-  late double _margin;
-
   BirdComponent({
     super.sprite,
     super.paint,
@@ -32,17 +15,34 @@ class BirdComponent extends SpriteComponent {
     super.priority,
   }) : super() {
     _velocity = Vector2(
-        preferredVelocity * sin(angle), -preferredVelocity * cos(angle));
+      preferredVelocity * sin(angle),
+      -preferredVelocity * cos(angle),
+    );
     _margin = size.length / 2;
   }
+  // TODO: boid properties
+  static const double vision = 150;
+  static final num safeDistanceSquared = pow(20, 2);
+  static const double preferredVelocity = 20;
+  static const double maxVelocity = 50;
+  static const double scale1 = 1 / 50;
+  static const double scale2 = 1 / 8;
+  static const double scale3 = 1;
 
-  void computeNext(Vector2 screenSize) {
+  late Vector2 _velocity;
+  Vector2? _nextVelocity;
+  List<Neighbor> neighbors = [];
+  late double _margin;
+
+  void computeNext(final Vector2 screenSize) {
     if (neighbors.isEmpty) {
       _nextVelocity = _velocity;
     } else {
       // rule 1: prefer to center of mass
       final center1 = neighbors.fold(
-              Vector2.zero(), (p, e) => p + e.bird.absolutePosition) *
+            Vector2.zero(),
+            (final p, final e) => p + e.bird.absolutePosition,
+          ) *
           (1 / neighbors.length);
       final v1 = (center1 - absolutePosition) * scale1;
 
@@ -56,10 +56,10 @@ class BirdComponent extends SpriteComponent {
       v2 *= scale2;
 
       // rule 3: match neighbors' velocities
-      final v3 =
-          neighbors.fold(Vector2.zero(), (p, e) => p + e.bird._velocity) *
-              (1 / neighbors.length) *
-              scale3;
+      final v3 = neighbors.fold(
+              Vector2.zero(), (final p, final e) => p + e.bird._velocity) *
+          (1 / neighbors.length) *
+          scale3;
 
       _nextVelocity = _velocity + v1 + v2 + v3;
 
@@ -83,8 +83,7 @@ class BirdComponent extends SpriteComponent {
     }
   }
 
-  void triggerUpdate(double dt, Vector2 screenSize) {
-    // print(neighbors);
+  void triggerUpdate(final double dt, final Vector2 screenSize) {
     neighbors.clear();
     _velocity = _nextVelocity!;
     position += _velocity * dt;
@@ -94,18 +93,16 @@ class BirdComponent extends SpriteComponent {
         (position.y + _margin) % (screenSize.y + 2 * _margin) - _margin;
     final slop = _velocity.x / _velocity.y;
     angle = pi / 2 - atan(slop);
-    // if ((angle > 0 && slop < 0) || (angle < 0 && slop > 0)) {
-    //   angle = -angle;
-    // }
-    assert(angle != double.nan &&
-        angle != double.infinity &&
-        angle != double.negativeInfinity);
+    assert(
+      angle != double.nan &&
+          angle != double.infinity &&
+          angle != double.negativeInfinity,
+    );
   }
 }
 
 class Neighbor {
+  Neighbor(this.bird, this.distanceSquared);
   final BirdComponent bird;
   final double distanceSquared;
-
-  Neighbor(this.bird, this.distanceSquared);
 }
