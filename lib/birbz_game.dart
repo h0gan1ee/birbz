@@ -26,7 +26,7 @@ class BirbzGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
-    state = await GameState.fromRandom(200, size);
+    state = await GameState.fromRandom(100, size);
 
     for (var e in state.birds) {
       await add(e);
