@@ -7,24 +7,24 @@ import "int_extension.dart";
 import 'package:flame/components.dart';
 
 class GameState {
-  GameState(this.birdSprite);
+  // GameState(this.birdSprite);
+  GameState();
   Random random = Random(); // TODO
-  Sprite birdSprite;
+  // Sprite birdSprite;
   List<BirdComponent> birds = [];
 
-  static Future<GameState> fromRandom(
-      final int birdCount, final Vector2 screenSize) async {
-    var state = GameState(await Sprite.load('birb.png'));
+  factory GameState.fromRandom(final int birdCount, final Vector2 screenSize) {
+    // var state = GameState(await Sprite.load('birb.png'));
+    var state = GameState();
     birdCount.forEach((final _) {
-      state.birds.add(
-        BirdComponent(
-          sprite: state.birdSprite,
-          position: screenSize.hadamardProduct(Vector2.random(state.random)),
-          angle: 2 * pi * state.random.nextDouble(),
-          // angle: pi / 6,
-          anchor: Anchor.center,
-        ),
-      );
+      state.birds.add(BirdComponent(
+        // sprite: state.birdSprite,
+        position: screenSize.hadamardProduct(Vector2.random(state.random)),
+        size: Vector2(10, 3),
+        angle: 2 * pi * state.random.nextDouble(),
+        // angle: pi / 6,
+        anchor: Anchor.center,
+      ));
     });
     return state;
   }
@@ -44,7 +44,7 @@ class GameState {
       });
     });
     for (final e in birds) {
-      e.computeNext(screenSize);
+      e.computeNext(screenSize, random);
     }
     for (final e in birds) {
       e.triggerUpdate(dt, screenSize);

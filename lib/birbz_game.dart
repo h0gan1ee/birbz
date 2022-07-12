@@ -1,5 +1,6 @@
 import "dart:ui";
 
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 
 import 'game_state.dart';
@@ -26,11 +27,13 @@ class BirbzGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
-    state = await GameState.fromRandom(100, size);
+    state = GameState.fromRandom(300, size);
 
     for (var e in state.birds) {
       await add(e);
     }
+
+    add(FpsTextComponent(scale: Vector2.all(0.6), position: Vector2.all(20)));
   }
 
   @override

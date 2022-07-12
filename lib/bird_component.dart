@@ -2,17 +2,15 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 
-class BirdComponent extends SpriteComponent {
+class BirdComponent extends RectangleComponent {
   BirdComponent({
-    super.sprite,
-    super.paint,
     super.position,
     super.size,
-    super.scale,
     super.angle,
     super.anchor,
     super.children,
     super.priority,
+    super.paint,
   }) : super() {
     _velocity = Vector2(
       preferredVelocity * sin(angle),
@@ -21,36 +19,36 @@ class BirdComponent extends SpriteComponent {
     _margin = size.length / 2;
   }
   // TODO: boid properties
-  static const double vision = 160;
-  static final num safeDistanceSquared = pow(6, 2);
-  static const double preferredVelocity = 25;
-  static const double maxVelocity = 60;
-  static const double scale1 = 1 / 3;
-  static const double scale2 = 1 / 2;
-  static const double scale3 = 1 / 4;
+  static const double vision = 260;
+  static final num safeDistanceSquared = pow(8, 2);
+  static const double preferredVelocity = 30;
+  static const double maxVelocity = 80;
+  static const double scale1 = 1 / 10;
+  static const double scale2 = 1 / 4;
+  static const double scale3 = 1 / 30;
 
   late Vector2 _velocity;
   Vector2? _nextVelocity;
   List<Neighbor> neighbors = [];
   late double _margin;
 
-  void computeNext(final Vector2 screenSize) {
+  void computeNext(final Vector2 screenSize, final Random random) {
     if (neighbors.isEmpty) {
       _nextVelocity = _velocity;
     } else {
       // rule 1: prefer to center of mass
       final center1 = neighbors.fold(
             Vector2.zero(),
-            (final p, final e) => p + e.bird.absolutePosition,
+            (final p, final e) => p + e.bird.position,
           ) *
           (1 / neighbors.length);
-      final v1 = (center1 - absolutePosition) * scale1;
+      final v1 = (center1 - position) * scale1;
 
       // rule 2: try to keep distance
       var v2 = Vector2.zero();
       for (var e in neighbors) {
         if (e.distanceSquared < safeDistanceSquared) {
-          v2 += absolutePosition - e.bird.absolutePosition;
+          v2 += position - e.bird.position;
         }
       }
       v2 *= scale2;
@@ -63,22 +61,23 @@ class BirdComponent extends SpriteComponent {
 
       _nextVelocity = _velocity + v1 + v2 + v3;
 
+      _nextVelocity?.length *= 0.94 + 0.11 * random.nextDouble();
+
       // rule 4: must in constrain
-      // if ((absolutePosition.x < _margin && _nextVelocity!.x < 0) ||
-      //     (absolutePosition.x > screenSize.x - _margin &&
+      // if ((position.x < _margin && _nextVelocity!.x < 0) ||
+      //     (position.x > screenSize.x - _margin &&
       //         _nextVelocity!.x > 0)) {
       //   _nextVelocity!.x = -_nextVelocity!.x;
       // }
-      // if ((absolutePosition.y < _margin && _nextVelocity!.y < 0) ||
-      //     (absolutePosition.y > screenSize.y - _margin &&
+      // if ((position.y < _margin && _nextVelocity!.y < 0) ||
+      //     (position.y > screenSize.y - _margin &&
       //         _nextVelocity!.y > 0)) {
       //   _nextVelocity!.y = -_nextVelocity!.y;
       // }
 
-      final length = _nextVelocity!.length;
-      if (length > maxVelocity) {
-        _nextVelocity!.normalize();
-        _nextVelocity!.scale(maxVelocity);
+      final lengthSquared = _nextVelocity!.length2;
+      if (lengthSquared > pow(maxVelocity, 2)) {
+        _nextVelocity!.length = maxVelocity;
       }
     }
   }
@@ -93,11 +92,6 @@ class BirdComponent extends SpriteComponent {
         (position.y + _margin) % (screenSize.y + 2 * _margin) - _margin;
     final slop = _velocity.x / _velocity.y;
     angle = pi / 2 - atan(slop);
-    assert(
-      angle != double.nan &&
-          angle != double.infinity &&
-          angle != double.negativeInfinity,
-    );
   }
 }
 
