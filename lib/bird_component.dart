@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flame/components.dart';
 
 class BirdComponent extends RectangleComponent {
-  BirdComponent({
+  BirdComponent(
+    Random random, {
     super.position,
     super.size,
     super.angle,
@@ -12,20 +13,23 @@ class BirdComponent extends RectangleComponent {
     super.priority,
     super.paint,
   }) : super() {
+    final velocityLength = preferredVelocity[0] +
+        (preferredVelocity[1] - preferredVelocity[0]) * random.nextDouble();
     _velocity = Vector2(
-      preferredVelocity * sin(angle),
-      -preferredVelocity * cos(angle),
+      velocityLength * sin(angle),
+      -velocityLength * cos(angle),
     );
     _margin = size.length / 2;
   }
+
   // TODO: boid properties
-  static const double vision = 260;
-  static final num safeDistanceSquared = pow(8, 2);
-  static const double preferredVelocity = 30;
-  static const double maxVelocity = 80;
-  static const double scale1 = 1 / 10;
-  static const double scale2 = 1 / 4;
-  static const double scale3 = 1 / 30;
+  static const double vision = 20;
+  static final num safeDistanceSquared = pow(6, 2);
+  static const List<double> preferredVelocity = [0, 5];
+  static const double maxVelocity = 60;
+  static const double scale1 = 1 / 9;
+  static const double scale2 = 1 / 10;
+  static const double scale3 = 1 / 6;
 
   late Vector2 _velocity;
   Vector2? _nextVelocity;
@@ -61,7 +65,7 @@ class BirdComponent extends RectangleComponent {
 
       _nextVelocity = _velocity + v1 + v2 + v3;
 
-      _nextVelocity?.length *= 0.94 + 0.11 * random.nextDouble();
+      _nextVelocity?.length *= 0.90 + 0.18 * random.nextDouble();
 
       // rule 4: must in constrain
       // if ((position.x < _margin && _nextVelocity!.x < 0) ||

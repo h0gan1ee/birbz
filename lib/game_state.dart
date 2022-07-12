@@ -18,6 +18,7 @@ class GameState {
     var state = GameState();
     birdCount.forEach((final _) {
       state.birds.add(BirdComponent(
+        state.random,
         // sprite: state.birdSprite,
         position: screenSize.hadamardProduct(Vector2.random(state.random)),
         size: Vector2(10, 3),
