@@ -24,11 +24,11 @@ class BirdComponent extends RectangleComponent {
 
   // TODO: boid properties
   static const double vision = 20;
-  static final num safeDistanceSquared = pow(6, 2);
-  static const List<double> preferredVelocity = [0, 5];
-  static const double maxVelocity = 60;
+  static final num safeDistanceSquared = pow(15, 2);
+  static const List<double> preferredVelocity = [1, 10];
+  static const double maxVelocity = 100;
   static const double scale1 = 1 / 9;
-  static const double scale2 = 1 / 10;
+  static const double scale2 = 1 / 3;
   static const double scale3 = 1 / 6;
 
   late Vector2 _velocity;
@@ -69,13 +69,11 @@ class BirdComponent extends RectangleComponent {
 
       // rule 4: must in constrain
       // if ((position.x < _margin && _nextVelocity!.x < 0) ||
-      //     (position.x > screenSize.x - _margin &&
-      //         _nextVelocity!.x > 0)) {
+      //     (position.x > screenSize.x - _margin && _nextVelocity!.x > 0)) {
       //   _nextVelocity!.x = -_nextVelocity!.x;
       // }
       // if ((position.y < _margin && _nextVelocity!.y < 0) ||
-      //     (position.y > screenSize.y - _margin &&
-      //         _nextVelocity!.y > 0)) {
+      //     (position.y > screenSize.y - _margin && _nextVelocity!.y > 0)) {
       //   _nextVelocity!.y = -_nextVelocity!.y;
       // }
 
